@@ -5,6 +5,7 @@ import axios from "axios";
 const OfferDetails = () => {
 
     const [offer, setOffer] = useState({job: "", languages: [], salary: 0 });
+
     const { id } = useParams();
     let navigation = useNavigate();
 
@@ -16,10 +17,11 @@ const OfferDetails = () => {
         .catch(err => console.log(err))
     }, [id]);
 
-    const updateOfferHandler = () => {
+    const updateOfferHandler = (newLanguages) => {
+        console.log(offer.languages);
         axios.put('http://localhost:8000/api/offer/'+id, {
             job: offer.job,
-            languages: offer.languages,
+            languages: newLanguages,
             salary: offer.salary
         })
             .then(res => {
@@ -32,16 +34,17 @@ const OfferDetails = () => {
     const handleLanguageChange = (e) => {
         console.log(e.target.checked);
         const language = e.target.value;
-        const isChecked = e.target.checked;
         let newLanguages = offer.languages.slice(); // crea una copia de la lista de lenguajes
-        console.log(newLanguages);
+        
         if (e.target.checked===true) {
           newLanguages.push(language);
         } else if (e.target.checked===false) {
           newLanguages = newLanguages.filter((lang) => lang !== language);
         }
         setOffer({ ...offer, languages: newLanguages });
-        updateOfferHandler(); // llama a la función de actualización de oferta cada vez que cambia el estado del checkbox
+        console.log(newLanguages);
+        
+        updateOfferHandler(newLanguages); // llama a la función de actualización de oferta cada vez que cambia el estado del checkbox
     };
     
 
